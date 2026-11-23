@@ -244,8 +244,10 @@ void dynamic_keymap_reset(bool save) {
             for (int column = 0; column < MATRIX_COLS; column++) {
                 dynamic_keymap_set_keycode_no_update(
                     layer, row, column, keycode_at_keymap_location_raw(layer, row, column));
-                set_zmk_keymap(layer, row, column,
-                               keycode_at_keymap_location_raw(layer, row, column));
+                // Patched: don't rewrite the live keymap from launcher keycodes
+                // (custom behaviors would become &none). It already is the compiled one.
+                /* set_zmk_keymap(layer, row, column, */
+                /*                keycode_at_keymap_location_raw(layer, row, column)); */
             }
         }
 #endif

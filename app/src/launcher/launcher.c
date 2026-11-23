@@ -352,7 +352,7 @@ static int launcher_handle_set(const char *name, size_t len, settings_read_cb re
             LOG_WRN("Invalid profile index: %s", next);
             return -EINVAL;
         }
-        if (layer > DYNAMIC_KEYMAP_LAYER_COUNT)
+        if (layer >= DYNAMIC_KEYMAP_LAYER_COUNT)
             return -EINVAL;
         if (len != KEYMAP_LEN) {
             LOG_ERR("Invalid keymap/0 size (got %d expected %d)", len, KEYMAP_LEN);
@@ -373,10 +373,10 @@ static int launcher_handle_set(const char *name, size_t len, settings_read_cb re
                      << 8) +
                     launcher_device
                         .keymaps[layer * KEYMAP_LEN + row * MATRIX_COLS * 2 + column * 2 + 1];
-                if (keycode != keycode_at_keymap_location_raw(layer, row, column)) {
-                    // LOG_DBG("set layer:%d,row:%d,column:%d,keycode:%x",layer,row,column,keycode);
-                    set_zmk_keymap(layer, row, column, keycode);
-                }
+                // Patched: the compiled keymap always wins. Launcher keycodes can't
+                // describe custom behaviors (hold-taps, mod-morphs, macros), so applying
+                // stored keycodes would replace them with stock keys or &none.
+                (void)keycode;
             }
         }
     }
