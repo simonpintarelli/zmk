@@ -44,5 +44,6 @@ manifest:
           - openthread
           - edtt
           - trusted-firmware-m
+          - acpica
   self:
     west-commands: scripts/west-commands.yml
